@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
 
 #  mongo:
@@ -21,9 +19,17 @@ services:
     hostname: mysql
     container_name: mysql
     restart: always
+    command: --init-file /docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: miniautorizador
       MYSQL_ROOT_PASSWORD: miniautorizador
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - db-ma:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db-ma:
+    driver: local
