@@ -1,3 +1,48 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
   application:
     name: miniautorizador
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/miniautorizador
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:miniautorizador}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    jackson:
+      property-naming-strategy: SNAKE_CASE
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: miniautorizador-app
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      group.liveness.include: livenessProbe,db
+  health:
+    probes.enabled: true
+    binders.enabled: false
+    diskspace.enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+      base-path: '/'
+      path-mapping:
+        prometheus: 'metrics'
+
+springdoc:
+  api-docs:
+    path: /docs
+    resolve-schema-properties: true
+
+  override-with-generic-response: false
+  paths-to-exclude: /**/api-docs,/swagger-resources/**
+  swagger-ui:
+    path: /
