@@ -9,16 +9,12 @@ public class TransactionEvent {
     private final EventType eventType;
     private final Long amount;
 
-    private TransactionEvent(UUID id, String username, String cardNumber, EventType eventType, Long amount) {
+    public TransactionEvent(UUID id, String username, String cardNumber, EventType eventType, Long amount) {
         this.id = id;
         this.username = username;
         this.cardNumber = cardNumber;
         this.eventType = eventType;
         this.amount = amount;
-    }
-
-    public static TransactionEvent newTransactionEvent(String username, String cardNumber, EventType eventType, Long amount) {
-        return new TransactionEvent(UUID.randomUUID(), username, cardNumber, eventType, amount);
     }
 
     public static TransactionEvent from(UUID id, String username, String cardNumber, EventType eventType, Long amount) {

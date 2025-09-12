@@ -1,7 +1,7 @@
 package br.com.darlansilva.miniautorizador.dataprovider.database.entity;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,7 +15,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,10 +38,10 @@ public class UserEntity {
     private String username;
     @Column(name = "password")
     private String password;
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CardAccountEntity> cardAccounts;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CardAccountEntity> cardAccounts;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<AuthorityEntity> authorities;
+    private List<AuthorityEntity> authorities;
     @Column(name = "created", nullable = false, updatable = false)
     private LocalDateTime created;
     @LastModifiedDate

@@ -8,15 +8,11 @@ public class CardAccount {
     private final User user;
     private final Card card;
 
-    private CardAccount(Long id, BigDecimal balance, User user, Card card) {
+     public CardAccount(Long id, BigDecimal balance, User user, Card card) {
         this.id = id;
         this.balance = balance;
         this.user = user;
         this.card = card;
-    }
-
-    public static CardAccount newCardAccount(BigDecimal balance, User user, Card card) {
-        return new CardAccount(null, balance, user, card);
     }
 
     public static CardAccount from(Long id, BigDecimal balance, User user, Card card) {

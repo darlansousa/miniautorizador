@@ -6,15 +6,11 @@ public class Card {
     private final String password;
     private final CardAccount cardAccount;
 
-    private Card(Long id, String cardNumber, String password, CardAccount cardAccount) {
+     public Card(Long id, String cardNumber, String password, CardAccount cardAccount) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.password = password;
         this.cardAccount = cardAccount;
-    }
-
-    public static Card newCard(String cardNumber, String password, CardAccount cardAccount) {
-        return new Card(null, cardNumber, password, cardAccount);
     }
 
     public static Card from(Long id, String cardNumber, String password, CardAccount cardAccount) {

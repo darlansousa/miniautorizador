@@ -38,7 +38,7 @@ public class CardAccountEntity {
     private Long id;
     @Column(name = "balance")
     private BigDecimal balance;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
     @OneToOne(fetch = FetchType.LAZY, optional = false)
