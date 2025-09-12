@@ -1,18 +1,20 @@
 package br.com.darlansilva.miniautorizador.core.domain;
 
+import br.com.darlansilva.miniautorizador.core.common.UserRole;
+
 public class Authority {
     private final Long id;
     private final User user;
-    private final String role;
+    private final UserRole role;
 
-    public Authority(Long id, User user, String role) {
+    public Authority(Long id, User user, UserRole role) {
         this.id = id;
         this.user = user;
         this.role = role;
     }
 
-    public static Authority from(Long id, User user, String authority) {
-        return new Authority(id, user, authority);
+    public static Authority from(Long id, User user, UserRole role) {
+        return new Authority(id, user, role);
     }
 
     public Long getId() {
@@ -23,7 +25,7 @@ public class Authority {
         return user;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 }
