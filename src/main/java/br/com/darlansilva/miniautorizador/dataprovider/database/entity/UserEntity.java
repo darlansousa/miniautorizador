@@ -38,9 +38,7 @@ public class UserEntity {
     private String username;
     @Column(name = "password")
     private String password;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CardAccountEntity> cardAccounts;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<AuthorityEntity> authorities;
     @Column(name = "created", nullable = false, updatable = false)
     private LocalDateTime created;

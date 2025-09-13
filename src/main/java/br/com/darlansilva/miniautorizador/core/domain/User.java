@@ -1,6 +1,7 @@
 package br.com.darlansilva.miniautorizador.core.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 import br.com.darlansilva.miniautorizador.core.common.UserRole;
 
@@ -35,5 +36,18 @@ public class User {
 
     public List<UserRole> getRoles() {
         return roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, roles);
     }
 }

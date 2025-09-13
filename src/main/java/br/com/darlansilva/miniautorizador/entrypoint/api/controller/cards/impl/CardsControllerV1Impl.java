@@ -1,6 +1,7 @@
 package br.com.darlansilva.miniautorizador.entrypoint.api.controller.cards.impl;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.darlansilva.miniautorizador.core.domain.Card;
+import br.com.darlansilva.miniautorizador.core.usecase.card.AccountBalanceUseCase;
+import br.com.darlansilva.miniautorizador.core.usecase.card.SaveCardAccountUseCase;
 import br.com.darlansilva.miniautorizador.entrypoint.api.controller.cards.CardsControllerV1;
 import br.com.darlansilva.miniautorizador.entrypoint.api.dto.input.CardInputFormDto;
 import br.com.darlansilva.miniautorizador.entrypoint.api.dto.output.CardOutputDto;
@@ -26,6 +30,9 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Cartões", description = "Através deste recurso é possível gerenciar os cartões do sistema")
 public class CardsControllerV1Impl implements CardsControllerV1 {
 
+    private final SaveCardAccountUseCase cardsUseCase;
+    private final AccountBalanceUseCase accountBalanceUseCase;
+
     @GetMapping("/{numeroCartao}")
     @Operation(
             summary = "Recuperar saldo do cartão",
@@ -38,8 +45,8 @@ public class CardsControllerV1Impl implements CardsControllerV1 {
             }
     )
     @Override
-    public BigDecimal findBalanceByCardNumber(@PathVariable(name = "numeroCartao") String cardNumber) {
-        return BigDecimal.TEN;
+    public BigDecimal findBalanceByCardNumber(@PathVariable(name = "numeroCartao") String cardNumber, Principal principal) {
+        return accountBalanceUseCase.getBalanceBy(cardNumber, principal.getName());
     }
 
     @PostMapping
@@ -55,11 +62,13 @@ public class CardsControllerV1Impl implements CardsControllerV1 {
             }
     )
     @Override
-    public CardOutputDto save(@RequestBody @Valid CardInputFormDto input) {
-        return CardOutputDto.builder()
-                .senha("1234")
-                .numeroCartao("6549873025634501")
-                .build();
+    public CardOutputDto save(@RequestBody @Valid CardInputFormDto input, Principal principal) {
+        return CardOutputDto.from(
+                cardsUseCase.saveCard(
+                        Card.from(input.getNumeroCartao(), input.getSenha()),
+                        principal.getName()
+                )
+        );
     }
 
 }

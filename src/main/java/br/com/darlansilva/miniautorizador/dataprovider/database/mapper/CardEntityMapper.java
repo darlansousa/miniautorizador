@@ -12,4 +12,5 @@ import br.com.darlansilva.miniautorizador.dataprovider.database.entity.CardEntit
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CardEntityMapper extends BaseMapper<CardEntity, Card> {
+
 }

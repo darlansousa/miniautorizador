@@ -1,20 +1,24 @@
 package br.com.darlansilva.miniautorizador.core.domain;
 
+import java.util.Objects;
+
 public class Card {
     private final Long id;
     private final String cardNumber;
     private final String password;
-    private final CardAccount cardAccount;
 
-     public Card(Long id, String cardNumber, String password, CardAccount cardAccount) {
+     public Card(Long id, String cardNumber, String password) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.password = password;
-        this.cardAccount = cardAccount;
     }
 
-    public static Card from(Long id, String cardNumber, String password, CardAccount cardAccount) {
-        return new Card(id, cardNumber, password, cardAccount);
+    public static Card from(Long id, String cardNumber, String password) {
+        return new Card(id, cardNumber, password);
+    }
+
+    public static Card from(String cardNumber, String password) {
+        return new Card(null, cardNumber, password);
     }
 
     public Long getId() {
@@ -29,7 +33,16 @@ public class Card {
         return password;
     }
 
-    public CardAccount getCardAccount() {
-        return cardAccount;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return Objects.equals(id, card.id) && Objects.equals(cardNumber, card.cardNumber) &&
+                Objects.equals(password, card.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cardNumber, password);
     }
 }

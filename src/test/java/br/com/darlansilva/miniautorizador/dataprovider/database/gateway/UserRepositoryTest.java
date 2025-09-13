@@ -73,7 +73,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void shouldFindUserByUserNameAndPassword() {
+    void shouldFindUserByUserName() {
         final var domain = EASY_RANDOM.nextObject(User.class);
         final var user = UserEntity.builder()
                 .id(domain.getId())
@@ -82,13 +82,13 @@ class UserRepositoryTest {
                 .build();
         final var expected = Optional.of(domain);
 
-        given(repositoryMock.findByUsernameAndPassword(user.getUsername(), user.getPassword()))
+        given(repositoryMock.findByUsername(user.getUsername()))
                 .willReturn(Optional.of(user));
         given(mapperMock.toDomain(user)).willReturn(domain);
 
-        assertEquals(expected, subject.findBy(user.getUsername(), user.getPassword()));
+        assertEquals(expected, subject.findBy(user.getUsername()));
 
-        then(repositoryMock).should().findByUsernameAndPassword(user.getUsername(), user.getPassword());
+        then(repositoryMock).should().findByUsername(user.getUsername());
         then(mapperMock).should().toDomain(user);
     }
 
@@ -103,20 +103,6 @@ class UserRepositoryTest {
         assertEquals(expected, subject.findBy(id));
 
         then(repositoryMock).should().findById(id);
-        then(mapperMock).shouldHaveNoInteractions();
-    }
-
-    @Test
-    void shouldReturnsEmptyWhenUserNotExistsOrPasswordIsInvalid() {
-        final var username = EASY_RANDOM.nextObject(String.class);
-        final var password = EASY_RANDOM.nextObject(String.class);
-        final var expected = Optional.empty();
-
-        given(repositoryMock.findByUsernameAndPassword(username, password)).willReturn(Optional.empty());
-
-        assertEquals(expected, subject.findBy(username, password));
-
-        then(repositoryMock).should().findByUsernameAndPassword(username, password);
         then(mapperMock).shouldHaveNoInteractions();
     }
 

@@ -33,8 +33,8 @@ public class UserRepository implements UserGateway {
     }
 
     @Override
-    public Optional<User> findBy(String username, String password) {
-        return repository.findByUsernameAndPassword(username, password).map(mapper::toDomain);
+    public Optional<User> findBy(String username) {
+        return repository.findByUsername(username).map(mapper::toDomain);
     }
 
     @Override

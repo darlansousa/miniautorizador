@@ -55,11 +55,11 @@ CREATE TABLE IF NOT EXISTS authorities (
 
 
 INSERT INTO users (username, password)
-SELECT 'admin','admin'
+SELECT 'admin','$2a$10$fJ65H/8ihJW40LOI4CAzWuiqp/G.TQs1rzs8RbfiR1avAP9Ty0Tau'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'admin');
 
 INSERT INTO users (username, password)
-SELECT 'user', 'user'
+SELECT 'user', '$2b$10$lNnrCtsLXsPB6RgFvxHbWuCE9jmC4DwUEI3b5DrlLZ72EBPYpGNfS'
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE username = 'user');
 
 INSERT INTO authorities (user_id, role)

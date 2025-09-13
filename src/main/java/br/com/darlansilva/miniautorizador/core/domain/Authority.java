@@ -17,6 +17,10 @@ public class Authority {
         return new Authority(id, user, role);
     }
 
+    public static Authority from(User user, UserRole role) {
+        return new Authority(null, user, role);
+    }
+
     public Long getId() {
         return id;
     }
@@ -28,4 +32,5 @@ public class Authority {
     public UserRole getRole() {
         return role;
     }
+
 }

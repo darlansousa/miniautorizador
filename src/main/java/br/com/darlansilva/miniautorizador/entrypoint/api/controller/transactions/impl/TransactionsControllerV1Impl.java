@@ -1,6 +1,6 @@
 package br.com.darlansilva.miniautorizador.entrypoint.api.controller.transactions.impl;
 
-import java.util.Arrays;
+import java.security.Principal;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.darlansilva.miniautorizador.core.domain.TransactionStatus;
+import br.com.darlansilva.miniautorizador.core.usecase.transaction.PaymentTransactionUseCase;
 import br.com.darlansilva.miniautorizador.entrypoint.api.controller.transactions.TransactionsControllerV1;
 import br.com.darlansilva.miniautorizador.entrypoint.api.dto.input.TransactionInputFormDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Transações", description = "Através deste recurso é possível fazer transações")
 public class TransactionsControllerV1Impl implements TransactionsControllerV1 {
 
+    private final PaymentTransactionUseCase paymentTransactionUseCase;
+
     @PostMapping
     @Operation(
             summary = "Fazer pagamento",
@@ -37,7 +40,12 @@ public class TransactionsControllerV1Impl implements TransactionsControllerV1 {
             }
     )
     @Override
-    public TransactionStatus pay(@RequestBody @Valid TransactionInputFormDto input) {
-        return Arrays.stream(TransactionStatus.values()).findAny().orElseThrow();
+    public TransactionStatus pay(@RequestBody @Valid TransactionInputFormDto input, Principal principal) {
+        return paymentTransactionUseCase.processPayment(
+                input.getNumeroCartao(),
+                input.getSenhaCartao(),
+                input.getValor(),
+                principal.getName()
+        );
     }
 }

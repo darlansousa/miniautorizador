@@ -11,7 +11,7 @@ public interface UserGateway {
 
     Optional<User> findBy(Long id);
 
-    Optional<User> findBy(String username, String password);
+    Optional<User> findBy(String username);
 
     User save(User user);
 

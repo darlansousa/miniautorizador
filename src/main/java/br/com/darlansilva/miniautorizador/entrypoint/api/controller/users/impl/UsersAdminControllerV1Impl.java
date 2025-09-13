@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.darlansilva.miniautorizador.core.domain.User;
+import br.com.darlansilva.miniautorizador.core.usecase.user.DeleteUserUseCase;
+import br.com.darlansilva.miniautorizador.core.usecase.user.ListUserUseCase;
+import br.com.darlansilva.miniautorizador.core.usecase.user.SaveUserUseCase;
+import br.com.darlansilva.miniautorizador.core.usecase.user.dto.UserInputDto;
 import br.com.darlansilva.miniautorizador.entrypoint.api.controller.users.UsersAdminControllerV1;
 import br.com.darlansilva.miniautorizador.entrypoint.api.dto.input.UserInputFormDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,9 +27,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/users")
+@RequestMapping("admin/v1/users")
 @Tag(name = "Admin users V1", description = "Através deste recurso é possível gerenciar os usuários do sistema")
 public class UsersAdminControllerV1Impl implements UsersAdminControllerV1 {
+
+    private final SaveUserUseCase saveUserUseCase;
+    private final ListUserUseCase listUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
 
 
     @GetMapping
@@ -40,7 +48,7 @@ public class UsersAdminControllerV1Impl implements UsersAdminControllerV1 {
     )
     @Override
     public List<User> getAll() {
-        return List.of(User.from(1L, "user", "password", List.of()));
+        return listUserUseCase.findAll();
     }
 
     @PostMapping
@@ -56,7 +64,7 @@ public class UsersAdminControllerV1Impl implements UsersAdminControllerV1 {
     )
     @Override
     public User save(@RequestBody @Valid UserInputFormDto input) {
-        return User.from(1L, "user", "password", List.of());
+        return saveUserUseCase.save(new UserInputDto(input.getUsername(), input.getPassword(), input.getRoles()));
     }
 
     @DeleteMapping("/{id}")
@@ -70,6 +78,6 @@ public class UsersAdminControllerV1Impl implements UsersAdminControllerV1 {
     )
     @Override
     public void delete(@PathVariable Long id) {
-
+        deleteUserUseCase.deleteBy(id);
     }
 }

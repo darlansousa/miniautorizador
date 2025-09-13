@@ -1,7 +1,9 @@
 package br.com.darlansilva.miniautorizador.core.exception;
 
-public class InvalidPasswordException extends UseCaseException{
+import static br.com.darlansilva.miniautorizador.core.domain.TransactionStatus.INVALID_PASSWORD;
+
+public class InvalidPasswordException extends NotAuthorizedTransaction{
     public InvalidPasswordException() {
-        super("SENHA_INVALIDA");
+        super(INVALID_PASSWORD.getValue());
     }
 }

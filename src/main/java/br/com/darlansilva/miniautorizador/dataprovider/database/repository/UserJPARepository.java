@@ -10,6 +10,6 @@ import br.com.darlansilva.miniautorizador.dataprovider.database.entity.UserEntit
 @Repository
 public interface UserJPARepository extends CrudRepository<UserEntity, Long> {
 
-    Optional<UserEntity> findByUsernameAndPassword(String username, String password);
+    Optional<UserEntity> findByUsername(String username);
 
 }

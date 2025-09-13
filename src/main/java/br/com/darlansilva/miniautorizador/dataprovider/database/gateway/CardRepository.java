@@ -37,6 +37,16 @@ public class CardRepository implements CardGateway {
     }
 
     @Override
+    public Optional<Card> findBy(String cardNumber, String username) {
+        return repository.findByCardNumberAndCardAccountUserUsername(cardNumber, username).map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<Card> findByCardNumberAndPassword(String cardNumber, String password) {
+        return repository.findByCardNumberAndPassword(cardNumber, password).map(mapper::toDomain);
+    }
+
+    @Override
     public Card save(Card card) {
         return mapper.toDomain(repository.save(mapper.toEntity(card)));
     }
