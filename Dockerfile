@@ -12,5 +12,4 @@ RUN mvn -q -B -DskipTests package
 FROM ghcr.io/graalvm/graalvm-community:21 AS runtime
 WORKDIR /app
 COPY --from=build /build/target/*.jar ./app.jar
-COPY docker-entrypoint.sh ./
 ENTRYPOINT ["java","-jar","/app/app.jar"]

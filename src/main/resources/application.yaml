@@ -16,7 +16,7 @@ spring:
     jackson:
       property-naming-strategy: SNAKE_CASE
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9094
     consumer:
       group-id: miniautorizador-app
 

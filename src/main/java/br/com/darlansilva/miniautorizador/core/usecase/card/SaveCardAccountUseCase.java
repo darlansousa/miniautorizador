@@ -28,7 +28,7 @@ public class SaveCardAccountUseCase {
     public Card saveCard(Card card, String username) {
         final var user = userGateway.findBy(username).orElseThrow(UserNotFoundException::new);
 
-        cardGateway.findBy(card.getCardNumber()).ifPresent(savedCard -> {
+        cardGateway.findBy(card.getCardNumber(), username).ifPresent(savedCard -> {
             throw new CardAlreadyExistisException(savedCard.getCardNumber(), savedCard.getPassword());
         });
         final var cardAccount = CardAccount.from(INITIAL_BALANCE, user, card);

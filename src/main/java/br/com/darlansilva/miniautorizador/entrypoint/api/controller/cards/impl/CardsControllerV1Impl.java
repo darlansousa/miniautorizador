@@ -3,14 +3,17 @@ package br.com.darlansilva.miniautorizador.entrypoint.api.controller.cards.impl;
 import java.math.BigDecimal;
 import java.security.Principal;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.darlansilva.miniautorizador.core.domain.Card;
+import br.com.darlansilva.miniautorizador.core.exception.NotAuthenticatedException;
 import br.com.darlansilva.miniautorizador.core.usecase.card.AccountBalanceUseCase;
 import br.com.darlansilva.miniautorizador.core.usecase.card.SaveCardAccountUseCase;
 import br.com.darlansilva.miniautorizador.entrypoint.api.controller.cards.CardsControllerV1;
@@ -41,11 +44,14 @@ public class CardsControllerV1Impl implements CardsControllerV1 {
                     @ApiResponse(responseCode = "200", content = {
                             @Content(schema = @Schema(implementation = BigDecimal.class))
                     }),
-                    @ApiResponse(responseCode = "401", description = "Cartão não existente")
+                    @ApiResponse(responseCode = "404", description = "Cartão não existente")
             }
     )
     @Override
     public BigDecimal findBalanceByCardNumber(@PathVariable(name = "numeroCartao") String cardNumber, Principal principal) {
+        if(principal == null) {
+            throw new NotAuthenticatedException();
+        }
         return accountBalanceUseCase.getBalanceBy(cardNumber, principal.getName());
     }
 
@@ -62,6 +68,7 @@ public class CardsControllerV1Impl implements CardsControllerV1 {
             }
     )
     @Override
+    @ResponseStatus(HttpStatus.CREATED)
     public CardOutputDto save(@RequestBody @Valid CardInputFormDto input, Principal principal) {
         return CardOutputDto.from(
                 cardsUseCase.saveCard(

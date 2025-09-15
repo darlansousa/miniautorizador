@@ -2,6 +2,8 @@ package br.com.darlansilva.miniautorizador.core.domain;
 
 import java.util.Objects;
 
+import br.com.darlansilva.miniautorizador.core.exception.InvalidPasswordException;
+
 public class Card {
     private final Long id;
     private final String cardNumber;
@@ -31,6 +33,12 @@ public class Card {
 
     public String getPassword() {
         return password;
+    }
+
+    public void checkIncorrect(String password, Runnable doBeforeException) {
+        if (Objects.equals(password, this.getPassword())) return;
+        doBeforeException.run();
+        throw new InvalidPasswordException();
     }
 
     @Override

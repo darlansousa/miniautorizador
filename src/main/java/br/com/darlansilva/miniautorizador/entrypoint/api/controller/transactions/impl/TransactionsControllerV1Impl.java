@@ -2,9 +2,11 @@ package br.com.darlansilva.miniautorizador.entrypoint.api.controller.transaction
 
 import java.security.Principal;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.darlansilva.miniautorizador.core.domain.TransactionStatus;
@@ -40,12 +42,13 @@ public class TransactionsControllerV1Impl implements TransactionsControllerV1 {
             }
     )
     @Override
-    public TransactionStatus pay(@RequestBody @Valid TransactionInputFormDto input, Principal principal) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String pay(@RequestBody @Valid TransactionInputFormDto input, Principal principal) {
         return paymentTransactionUseCase.processPayment(
                 input.getNumeroCartao(),
                 input.getSenhaCartao(),
                 input.getValor(),
                 principal.getName()
-        );
+        ).getValue();
     }
 }

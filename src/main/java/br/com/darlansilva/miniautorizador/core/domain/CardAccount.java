@@ -3,6 +3,8 @@ package br.com.darlansilva.miniautorizador.core.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import br.com.darlansilva.miniautorizador.core.exception.InsufficientFoundsException;
+
 public class CardAccount {
     private final Long id;
     private final BigDecimal balance;
@@ -38,6 +40,12 @@ public class CardAccount {
 
     public Card getCard() {
         return card;
+    }
+
+    public void isBalanceAvailableFor(BigDecimal thisAmount, Runnable doBeforeException) {
+        if (this.getBalance().compareTo(thisAmount) > 0) return;
+        doBeforeException.run();
+        throw new InsufficientFoundsException();
     }
 
     @Override

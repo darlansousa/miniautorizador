@@ -15,8 +15,6 @@ import br.com.darlansilva.miniautorizador.core.domain.CardAccount;
 import br.com.darlansilva.miniautorizador.core.domain.TransactionStatus;
 import br.com.darlansilva.miniautorizador.core.domain.TransactionStatusEvent;
 import br.com.darlansilva.miniautorizador.core.exception.CardNotFoundException;
-import br.com.darlansilva.miniautorizador.core.exception.InvalidPasswordException;
-import br.com.darlansilva.miniautorizador.core.exception.InsufficientFoundsException;
 import br.com.darlansilva.miniautorizador.core.gateway.CardAccountGateway;
 import br.com.darlansilva.miniautorizador.core.gateway.CardGateway;
 import br.com.darlansilva.miniautorizador.core.gateway.TransactionStatusPublisherGateway;
@@ -53,10 +51,7 @@ public class PaymentTransactionUseCase {
     }
 
     private void checkPassword(String password, BigDecimal value, String username, Card card) {
-        if (!card.getPassword().equals(password)) {
-            sendEvent(username, value, INVALID_PASSWORD);
-            throw new InvalidPasswordException();
-        }
+        card.checkIncorrect(password, () -> sendEvent(username, value, INVALID_PASSWORD));
     }
 
     private void sendEvent(String username, BigDecimal value, TransactionStatus status) {
@@ -69,11 +64,7 @@ public class PaymentTransactionUseCase {
     }
 
     private void update(BigDecimal value, CardAccount account, Card card) {
-        if (account.getBalance().compareTo(value) < 0){
-            sendEvent(account.getUser().getUsername(), value, INSUFFICIENT_FUNDS);
-            throw new InsufficientFoundsException();
-        }
-
+        account.isBalanceAvailableFor(value, () -> sendEvent(account.getUser().getUsername(), value, INSUFFICIENT_FUNDS));
         cardAccountGateway.save(
                 CardAccount.from(
                         account.getId(),
