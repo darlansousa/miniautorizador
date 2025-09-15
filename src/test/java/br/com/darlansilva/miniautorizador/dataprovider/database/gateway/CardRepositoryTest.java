@@ -94,6 +94,26 @@ class CardRepositoryTest {
         then(mapperMock).should().toDomain(card);
     }
 
+    @Test
+    void shouldFindCardByNumberAndUsername() {
+        final var username = EASY_RANDOM.nextObject(String.class);
+        final var domain = EASY_RANDOM.nextObject(Card.class);
+        final var card = CardEntity.builder()
+                .id(domain.getId())
+                .cardNumber(domain.getCardNumber())
+                .password(domain.getPassword())
+                .build();
+        final var expected = Optional.of(domain);
+
+        given(repositoryMock.findByCardNumberAndCardAccountUserUsername(card.getCardNumber(), username))
+                .willReturn(Optional.of(card));
+        given(mapperMock.toDomain(card)).willReturn(domain);
+
+        assertEquals(expected, subject.findBy(card.getCardNumber(), username));
+
+        then(repositoryMock).should().findByCardNumberAndCardAccountUserUsername(card.getCardNumber(), username);
+        then(mapperMock).should().toDomain(card);
+    }
 
     @Test
     void shouldReturnsEmptyWhenCardNotExists() {
@@ -139,14 +159,6 @@ class CardRepositoryTest {
         then(repositoryMock).should().save(card);
         then(mapperMock).should().toDomain(card);
         then(mapperMock).should().toEntity(domain);
-    }
-
-    @Test
-    void shouldDelete() {
-        final var id = EASY_RANDOM.nextLong();
-        subject.deleteBy(id);
-        then(repositoryMock).should().deleteById(id);
-        then(mapperMock).shouldHaveNoInteractions();
     }
     
 }

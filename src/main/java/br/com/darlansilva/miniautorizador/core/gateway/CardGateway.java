@@ -15,10 +15,6 @@ public interface CardGateway {
 
     Optional<Card> findBy(String cardNumber, String username);
 
-    Optional<Card> findByCardNumberAndPassword(String cardNumber, String password);
-
     Card save(Card card);
-
-    void deleteBy(Long id);
 
 }

@@ -57,4 +57,38 @@ class CardAccountRepositoryTest {
         then(mapperMock).should().toEntity(domain);
     }
 
+    @Test
+    void shouldFindByUsernameAndCardNumber() {
+        final var domain = EASY_RANDOM.nextObject(CardAccount.class);
+        final var username = domain.getUser().getUsername();
+        final var cardNumber = domain.getCard().getCardNumber();
+        final var entity = CardAccountEntity.builder()
+                .id(domain.getId())
+                .card(CardEntity.builder()
+                              .cardNumber(cardNumber)
+                              .id(domain.getCard().getId())
+                              .password(domain.getCard().getPassword())
+                              .build())
+                .user(UserEntity.builder()
+                              .username(username)
+                              .password(cardNumber)
+                              .build())
+                .build();
+
+        given(repositoryMock.findByUserUsernameAndCardCardNumber(
+                username,
+                cardNumber)
+        ).willReturn(java.util.Optional.of(entity));
+
+        given(mapperMock.toDomain(entity)).willReturn(domain);
+
+        final var actual = subject.findBy(username, cardNumber);
+
+        then(repositoryMock).should().findByUserUsernameAndCardCardNumber(username, cardNumber);
+        then(mapperMock).should().toDomain(entity);
+
+        assert actual.isPresent();
+        assert actual.get().equals(domain);
+    }
+
 }
