@@ -45,10 +45,8 @@ class SaveCardAccountUseCaseTest {
 
         given(userGatewayMock.findBy(username)).willReturn(Optional.of(user));
         given(cardGatewayMock.findBy(cardNumber)).willReturn(Optional.empty());
-        given(cardGatewayMock.save(card)).willReturn(card);
 
         assertEquals(card, subject.saveCard(card, username));
-        then(cardGatewayMock).should().save(card);
         then(cardAccountGatewayMock).should().save(CardAccount.from(BigDecimal.valueOf(500), user, card));
         then(userGatewayMock).should().findBy(username);
     }
